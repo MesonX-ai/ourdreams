@@ -78,5 +78,5 @@ ok "Static build complete."
 log "Uploading new/changed files to GoDaddy (public_html/ourdreams.us)..."
 ARGS=()
 [[ "$DRY_RUN" == true ]] && ARGS+=(--dry-run)
-node scripts/ftp-deploy.mjs "${ARGS[@]}"
+node scripts/ftp-deploy.mjs ${ARGS[@]+"${ARGS[@]}"}
 ok "Deploy finished."
