@@ -6,8 +6,8 @@
 #   - Commits and pushes source to https://github.com/MesonX-ai/ourdreams.git
 #   - Builds static export (Next.js output: "export")
 #   - Uploads only changed files using MD5 checksum comparison
-#   - Deploys into the EXISTING /public_html/ourdreams.us folder on GoDaddy
-#     (override with FTP_REMOTE_DIR env var if the folder ever changes)
+#   - Deploys into the EXISTING `ourdreams.us` folder in the FTP home on GoDaddy
+#     (the FTP home is public_html; override with FTP_REMOTE_DIR if it changes)
 #
 # Usage:
 #   ./deploy.sh                  # full deploy (git + build + ftp)
@@ -33,9 +33,10 @@ FTP_PORT="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurD
 FTP_USER="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').username)")"
 FTP_PASS="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').password)")"
 
-# Remote web root on GoDaddy — the site lives in /public_html/ourdreams.us.
+# Remote web root on GoDaddy — the FTP user's home IS public_html, and the
+# site lives in the existing `ourdreams.us` folder inside it.
 # (Env override: FTP_REMOTE_DIR=/some/other/path ./deploy.sh)
-FTP_PATH="${FTP_REMOTE_DIR:-/public_html/ourdreams.us}"
+FTP_PATH="${FTP_REMOTE_DIR:-ourdreams.us}"
 
 SKIP_GIT=false
 SKIP_BUILD=false

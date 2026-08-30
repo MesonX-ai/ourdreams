@@ -54,9 +54,9 @@ npm run preview                    # serves out/ at http://localhost:3000
 ## Deploy
 
 `scripts/deploy.mjs` uses `basic-ftp`, reading `FTP_HOST` / `FTP_USER` / `FTP_PASSWORD` from
-env. It mirrors `out/` → `public_html/ourdreams.us` and `php/` → `public_html/ourdreams.us/api`,
-copies `.htaccess` to the web root, and **never touches `wp/`**. FTP credentials are never
-committed (see `.gitignore` and the security note below).
+env. It mirrors `out/` → `ourdreams.us` and `php/` → `ourdreams.us/api` (the FTP user's home
+is `public_html`), copies `.htaccess` to the web root, and **never touches `wp/`**. FTP
+credentials are never committed (see `.gitignore` and the security note below).
 
 ## Security notes
 

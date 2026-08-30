@@ -2,8 +2,8 @@
 // Dry-run by default: `npm run deploy:dry`. Real upload with `npm run deploy`.
 //
 // Reads FTP_HOST / FTP_USER / FTP_PASSWORD from env (never committed).
-// Mirrors out/ -> public_html/ourdreams.us and php/ -> public_html/ourdreams.us/api,
-// removes stale files, and never touches wp/.
+// Mirrors out/ -> ourdreams.us and php/ -> ourdreams.us/api on the FTP server
+// (the FTP home is public_html), removes stale files, and never touches wp/.
 import { Client } from "basic-ftp";
 import { readdirSync, statSync, createReadStream, existsSync } from "node:fs";
 import { join, relative, dirname } from "node:path";
@@ -13,7 +13,7 @@ const DRY = process.argv.includes("--dry");
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT_DIR = join(ROOT, "out");
 const PHP_DIR = join(ROOT, "php");
-const REMOTE_WEB = process.env.FTP_REMOTE_WEB || "public_html/ourdreams.us";
+const REMOTE_WEB = process.env.FTP_REMOTE_WEB || "ourdreams.us";
 const REMOTE_API = `${REMOTE_WEB}/api`;
 
 const FTP = {

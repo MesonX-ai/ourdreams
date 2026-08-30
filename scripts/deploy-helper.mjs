@@ -89,6 +89,9 @@ async function lftpScript(buildDir, host, port, user, pass, remotePath, files) {
     "set net:timeout 30",
     "set ftp:charset utf8",
     "set ftp:passive on",
+    // CRITICAL: abort the whole script if any command fails — otherwise a
+    // failed `cd` would silently upload into the FTP home root.
+    "set cmd:fail-exit yes",
     `open -u ${user},${pass} -p ${port} ftp://${host}`,
     "",
     `# Navigate to the EXISTING remote folder (do not create new)`,
@@ -110,10 +113,10 @@ async function lftpScript(buildDir, host, port, user, pass, remotePath, files) {
   }
 
   lines.push("");
-  lines.push("# Upload changed files");
+  lines.push("# Upload changed files (-o keeps the relative path under the cd target)");
   for (const f of files) {
     const abs = join(buildDir, f);
-    lines.push(`put "${abs}" -O . "${f}"`);
+    lines.push(`put "${abs}" -o "${f}"`);
   }
 
   lines.push("");
