@@ -24,7 +24,7 @@ const body = Outfit({
   fallback: ["system-ui", "sans-serif"],
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://ourdreams.example";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.ourdreams.us";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
