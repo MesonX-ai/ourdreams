@@ -1,0 +1,135 @@
+:root {
+  /* Brand tokens — rebrand = edit this file only. */
+  --ink: #222325;
+  --ink-rgb: 34 35 37;
+  --plum: #1f2022;
+  --plum-rgb: 31 32 34;
+  --champagne: #f5efdf;
+  --champagne-rgb: 245 239 223;
+  --gold: #d4af37;
+  --gold-rgb: 212 175 55;
+  --gold-light: #ffd700;
+  --gold-dark: #b8860b;
+  --blush: #fffef8;
+  --blush-rgb: 255 254 248;
+  --cream: #ffffff;
+  --cream-rgb: 255 255 255;
+  --sage: #62646a;
+  --sage-rgb: 98 100 106;
+
+  /* Derived surfaces */
+  --ink-90: rgba(34, 35, 37, 0.9);
+  --plum-soft: #35363a;
+  --champagne-soft: rgba(245, 239, 223, 0.16);
+  --gold-soft: rgba(212, 175, 55, 0.12);
+
+  /* Typography scale */
+  --step--1: clamp(0.82rem, 0.8rem + 0.1vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.6rem, 1.4rem + 1vw, 2.25rem);
+  --step-3: clamp(2.1rem, 1.7rem + 2vw, 3.4rem);
+  --step-4: clamp(2.8rem, 2.1rem + 3.4vw, 5rem);
+
+  /* Spacing / radius */
+  --maxw: 1320px;
+  --radius: 1rem;
+  --header-h: 120px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --header-h: 72px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  background: #ffffff;
+  color: var(--ink);
+  font-family: var(--font-body), "Inter", system-ui, sans-serif;
+  font-size: var(--step-0);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display), "Lato", sans-serif;
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -3rem;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius);
+  transition: top 0.2s var(--ease);
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--maxw);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 4vw, 2.5rem);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment & secrets — never commit
+.env
+.env.local
+.env*.local
+
+# PHP secrets
+php/config.php
+
+# Workspace FTP credentials
+ftp-config.json
+
+# Deploy checksum tracking (local-only)
+.deploy-checksums.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
