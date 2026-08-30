@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { talkToSales } from "./talkToSales";
 import { Reveal } from "./Reveal";
@@ -7,28 +8,53 @@ import { AnimatedCounter } from "./Reveal";
 import { useTextScramble } from "@/hooks/useAnimations";
 import { useState } from "react";
 import { RandomGoldenGlowDense } from "./RandomGoldenGlow";
+import { Parallax } from "./CgParallax";
 
 export function CgHero() {
   const openPanel = talkToSales((s) => s.openPanel);
   const [scrambleTrigger, setScrambleTrigger] = useState(false);
   const headline = useTextScramble("We automate everything but the smile.", scrambleTrigger);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Mouse-depth parallax: writes normalized cursor position as CSS vars,
+  // which drive layered translations via .cg-mp-depth-* classes.
+  const onMouseMove = (e: React.MouseEvent) => {
+    const el = sectionRef.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const rect = el.getBoundingClientRect();
+    el.style.setProperty("--mx", (((e.clientX - rect.left) / rect.width - 0.5) * 2).toFixed(3));
+    el.style.setProperty("--my", (((e.clientY - rect.top) / rect.height - 0.5) * 2).toFixed(3));
+  };
 
   return (
     <section
+      ref={sectionRef}
       aria-label="Hero"
       className="relative overflow-hidden"
       style={{ paddingTop: "var(--header-h)" }}
       onMouseEnter={() => setScrambleTrigger(true)}
+      onMouseMove={onMouseMove}
     >
       {/* Morphing gradient background */}
       <div className="cg-morph-bg absolute inset-0" />
       <div className="cg-grid-overlay absolute inset-0" />
       <RandomGoldenGlowDense count={8} />
 
-      {/* Floating orbs */}
+      {/* Floating orbs (ambient) + mouse-parallax sparkle layers */}
       <div className="cg-orb" style={{ top: "5%", left: "8%", width: 300, height: 300, background: "rgba(212, 175, 55, 0.1)" }} />
       <div className="cg-orb" style={{ top: "40%", right: "5%", width: 250, height: 250, background: "rgba(255, 215, 0, 0.08)", animationDelay: "2s" }} />
       <div className="cg-orb" style={{ bottom: "10%", left: "30%", width: 200, height: 200, background: "rgba(212, 175, 55, 0.06)", animationDelay: "4s" }} />
+      <div className="cg-mp-depth-1 pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <span className="cg-hero-sparkle" style={{ top: "18%", left: "12%" }}>✦</span>
+        <span className="cg-hero-sparkle" style={{ top: "64%", left: "6%", animationDelay: "1.4s" }}>✧</span>
+        <span className="cg-hero-sparkle" style={{ top: "12%", left: "58%", animationDelay: "2.2s" }}>✦</span>
+      </div>
+      <div className="cg-mp-depth-2 pointer-events-none absolute inset-0 z-0" aria-hidden="true">
+        <span className="cg-hero-sparkle" style={{ top: "30%", left: "88%" }}>✧</span>
+        <span className="cg-hero-sparkle" style={{ top: "76%", left: "92%", animationDelay: "0.9s" }}>✦</span>
+        <span className="cg-hero-sparkle" style={{ top: "48%", left: "3%", animationDelay: "2.8s" }}>✦</span>
+      </div>
 
       <div className="container relative z-10 py-12 md:py-20">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-16">
@@ -60,9 +86,9 @@ export function CgHero() {
 
             <Reveal delay={0.2}>
               <p className="cg-sub max-w-[50ch] text-lg leading-relaxed">
-                Transform your corporate gifting with an all-in-one platform that handles
-                sourcing, customization, fulfillment, and automation — so you can focus on
-                what matters most.
+                We source, customize, pack, and ship world-class gifts — automatically.
+                You take the applause; we sweat every detail, so each arrival feels
+                like a little piece of magic.
               </p>
             </Reveal>
 
@@ -113,14 +139,15 @@ export function CgHero() {
             </Reveal>
           </div>
 
-          {/* Image / Visual side */}
-          <Reveal direction="left" delay={0.2}>
+          {/* Image / Visual side — scroll parallax + mouse depth */}
+          <Parallax speed={-0.08}>
+            <Reveal direction="left" delay={0.2}>
             <div className="relative">
               {/* Glowing ring decoration */}
               <div className="cg-ring-decoration absolute -inset-4 opacity-60" />
               
               {/* Main card */}
-              <div className="cg-hero-card relative overflow-hidden rounded-3xl border border-gold/20 bg-white/80 p-2 shadow-2xl shadow-gold/10 backdrop-blur-xl">
+              <div className="cg-hero-card cg-mp-depth-2 relative overflow-hidden rounded-3xl border border-gold/20 bg-white/80 p-2 shadow-2xl shadow-gold/10 backdrop-blur-xl">
                 <div className="overflow-hidden rounded-2xl">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
@@ -157,7 +184,8 @@ export function CgHero() {
                 </div>
               </div>
             </div>
-          </Reveal>
+            </Reveal>
+          </Parallax>
         </div>
 
         {/* Stats bar */}

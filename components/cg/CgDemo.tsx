@@ -3,6 +3,7 @@
 import { CgRequestForm } from "./CgRequestForm";
 import { Reveal } from "./Reveal";
 import { RandomGoldenGlow } from "./RandomGoldenGlow";
+import { SparkleDrift } from "./CgParallax";
 
 export function CgDemo() {
   return (
@@ -10,6 +11,7 @@ export function CgDemo() {
       <div className="cg-orb" style={{ top: "15%", right: "5%", width: 300, height: 300, background: "radial-gradient(circle, rgba(212,175,55,0.08), transparent 70%)" }} />
       <div className="cg-orb" style={{ bottom: "10%", left: "10%", width: 200, height: 200, background: "radial-gradient(circle, rgba(255,215,0,0.05), transparent 70%)", animationDelay: "2s" }} />
       <RandomGoldenGlow count={6} />
+      <SparkleDrift speed={-0.1} />
 
       <div className="container">
         <Reveal>

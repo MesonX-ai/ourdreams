@@ -6,7 +6,8 @@
 #   - Commits and pushes source to https://github.com/MesonX-ai/ourdreams.git
 #   - Builds static export (Next.js output: "export")
 #   - Uploads only changed files using MD5 checksum comparison
-#   - Uses the EXISTING /public_html/ourdreams folder (no new folders created)
+#   - Deploys into the EXISTING /public_html/ourdreams.us folder on GoDaddy
+#     (override with FTP_REMOTE_DIR env var if the folder ever changes)
 #
 # Usage:
 #   ./deploy.sh                  # full deploy (git + build + ftp)
@@ -25,13 +26,16 @@ GITHUB_REPO="https://github.com/MesonX-ai/ourdreams.git"
 CHECKSUM_FILE="${PROJECT_DIR}/.deploy-checksums.json"
 DEPLOY_HELPER="${PROJECT_DIR}/scripts/deploy-helper.mjs"
 
-# FTP config — pulled from ftp-config.json (the "OurDreams" entry)
+# FTP config — host/credentials pulled from ftp-config.json (the "OurDreams" entry)
 FTP_CONFIG="${PROJECT_DIR}/../ftp-config.json"
 FTP_HOST="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').host)")"
 FTP_PORT="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').port)")"
 FTP_USER="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').username)")"
 FTP_PASS="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').password)")"
-FTP_PATH="$(node -e "console.log(require('${FTP_CONFIG}').find(e=>e.name==='OurDreams').path)")"
+
+# Remote web root on GoDaddy — the site lives in /public_html/ourdreams.us.
+# (Env override: FTP_REMOTE_DIR=/some/other/path ./deploy.sh)
+FTP_PATH="${FTP_REMOTE_DIR:-/public_html/ourdreams.us}"
 
 SKIP_GIT=false
 SKIP_BUILD=false

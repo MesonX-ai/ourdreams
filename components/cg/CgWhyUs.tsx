@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useInView } from "@/hooks/useAnimations";
 import { RandomGoldenGlow } from "./RandomGoldenGlow";
+import { SparkleDrift } from "./CgParallax";
 
 type Feature = {
   title: string;
@@ -90,6 +91,7 @@ export function CgWhyUs() {
       <div className="cg-orb" style={{ top: "8%", left: "5%", width: 280, height: 280, background: "radial-gradient(circle, rgba(212,175,55,0.1), transparent 70%)" }} />
       <div className="cg-orb" style={{ bottom: "5%", right: "8%", width: 320, height: 320, background: "radial-gradient(circle, rgba(255,215,0,0.06), transparent 70%)", animationDelay: "3s" }} />
       <RandomGoldenGlow count={5} />
+      <SparkleDrift speed={0.14} />
 
       <div className="container">
         <header className="mx-auto max-w-3xl text-center">

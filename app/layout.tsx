@@ -1,20 +1,23 @@
 import type { Metadata } from "next";
-import { Lato, Inter } from "next/font/google";
+import { Playfair_Display, Outfit } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { CgHeader } from "@/components/cg/CgHeader";
 import { CgFooter } from "@/components/cg/CgFooter";
 import { CgTalkToSalesPanel } from "@/components/cg/CgTalkToSalesPanel";
+import { CgScrollProgress } from "@/components/cg/CgScrollProgress";
+import { CgCursorAura } from "@/components/cg/CgCursorAura";
 
-const display = Lato({
+const display = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
-  weight: ["400", "700", "900"],
-  fallback: ["sans-serif"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  style: ["normal", "italic"],
+  fallback: ["Georgia", "serif"],
 });
 
-const body = Inter({
+const body = Outfit({
   subsets: ["latin"],
   variable: "--font-body",
   display: "swap",
@@ -51,6 +54,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         <Providers>
+          <CgScrollProgress />
+          <CgCursorAura />
           <CgHeader />
           <CgTalkToSalesPanel />
           <main id="main" className="relative">{children}</main>

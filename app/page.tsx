@@ -10,6 +10,7 @@ import { CgAwards } from "@/components/cg/CgAwards";
 import { CgBlog } from "@/components/cg/CgBlog";
 import { CgDemo } from "@/components/cg/CgDemo";
 import { RandomGoldenGlowDense } from "@/components/cg/RandomGoldenGlow";
+import { CgSectionDivider } from "@/components/cg/CgSectionDivider";
 
 export default function HomePage() {
     return (
@@ -17,14 +18,17 @@ export default function HomePage() {
       <RandomGoldenGlowDense count={14} />
       <CgPixieHero />
       <CgHero />
+      <CgSectionDivider />
       <CgSocialProof />
       <CgClients />
       <CgWhyUs />
+      <CgSectionDivider flip />
       <CgEngage />
       <CgWorkflows />
       <CgTestimonials />
       <CgAwards />
       <CgBlog />
+      <CgSectionDivider />
       <CgDemo />
     </>
   );
