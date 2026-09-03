@@ -3,7 +3,7 @@
 # start_local.sh — build and run OurDreams locally.
 #
 # Usage:
-#   ./start_local.sh              # build (if needed) and start on port 3000
+#   ./start_local.sh              # clean, rebuild, and start on port 3000
 #   ./start_local.sh -p 3100      # custom port
 #   ./start_local.sh --dev        # next dev (hot reload) + local PHP proxy
 #   ./start_local.sh --fresh      # reinstall node_modules and rebuild
@@ -60,10 +60,11 @@ if [[ "$MODE" == "dev" ]]; then
   exec npx next dev -p "$PORT"
 fi
 
-if [[ ! -d out ]]; then
-  echo "🔨 No static build found — building ..."
-  npm run build
-fi
+echo "🧹 Cleaning previous static build output ..."
+rm -rf out .next
+
+echo "🔨 Building static files ..."
+npm run build
 
 echo "🚀 Previewing static export at http://localhost:$PORT ..."
 exec node scripts/preview.mjs
