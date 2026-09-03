@@ -1,0 +1,20 @@
+/* ===================================
+	Magnific Popup - v1.1.0 - RTL
+====================================== */
+.rtl .mfp-title {
+    text-align: inherit;
+    text-align: right;
+    padding-right: inherit;
+    padding-left: 36px;
+}
+.rtl .mfp-counter {
+    right: inherit;
+    left: 0;
+}
+.rtl .mfp-content {
+    text-align: right;
+}
+.rtl .ourdreams-product-share-popup .social-icons-wrapper ul li a {
+    margin-right: 0;
+    margin-left: 5px;
+}
