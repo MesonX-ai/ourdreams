@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280" viewBox="0 0 280 280">
+  <rect fill="#f3f4f6" width="280" height="280"/>
+  <rect fill="#ffb3c1" x="60" y="80" width="160" height="120" rx="12"/>
+  <ellipse fill="#ff8fa3" cx="100" cy="120" rx="25" ry="30"/>
+  <ellipse fill="#ff8fa3" cx="180" cy="120" rx="25" ry="30"/>
+  <path fill="#ff8fa3" d="M 70 170 Q 140 190 210 170"/>
+  <text x="140" y="220" font-family="Montserrat, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle" font-weight="600">Soft Pillow</text>
+</svg>

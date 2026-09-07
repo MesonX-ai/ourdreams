@@ -1,0 +1,904 @@
+/* ========== HOMEPAGE STYLES - OURDREAMS-STORE ECOMMERCE ========== */
+
+.homeRoot {
+  background: #fff;
+  color: #232323;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* HEADER */
+.header {
+  background: #fff;
+  border-bottom: 1px solid #ececec;
+  padding: 16px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.headerContent {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #232323;
+}
+
+.nav {
+  display: flex;
+  gap: 30px;
+  flex: 1;
+}
+
+.nav a {
+  text-decoration: none;
+  color: #232323;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.nav a:hover {
+  color: #E93172;
+}
+
+.headerActions {
+  display: flex;
+  gap: 20px;
+  margin-left: auto;
+}
+
+.searchBtn,
+.cartBtn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: color 0.3s ease;
+  color: #232323;
+}
+
+.searchBtn:hover,
+.cartBtn:hover {
+  color: #E93172;
+}
+
+/* CAROUSEL / HERO SECTION */
+.carousel {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 80px 20px;
+}
+
+.carouselContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.carouselLabel {
+  font-size: 0.8rem;
+  color: #E93172;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin: 0 0 16px 0;
+}
+
+.carouselTitle {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0 0 24px 0;
+  color: #232323;
+  letter-spacing: -1px;
+}
+
+.carouselDescription {
+  font-size: 1rem;
+  color: #7d7d7d;
+  line-height: 1.6;
+  margin: 0 0 32px 0;
+}
+
+.carouselButtons {
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+  text-transform: capitalize;
+}
+
+.btnPrimary {
+  background: #E93172;
+  color: #fff;
+}
+
+.btnPrimary:hover {
+  background: #a85f3f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(189, 116, 76, 0.3);
+}
+
+.carouselImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carouselImage img {
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* SECTIONS */
+.section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  border-bottom: 1px solid #ececec;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.sectionHeader h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #232323;
+  letter-spacing: -0.5px;
+}
+
+.viewMore {
+  text-decoration: none;
+  color: #E93172;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: color 0.3s ease;
+}
+
+.viewMore:hover {
+  color: #a85f3f;
+}
+
+/* PRODUCTS GRID */
+.productsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.product {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.productImage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  aspect-ratio: 1 / 1;
+  background: #f4f5f5;
+  cursor: pointer;
+}
+
+.productImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.productImage:hover img {
+  transform: scale(1.08);
+}
+
+.productOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.productImage:hover .productOverlay {
+  opacity: 1;
+}
+
+.quickViewBtn {
+  background: #E93172;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.quickViewBtn:hover {
+  background: #a85f3f;
+  transform: scale(1.05);
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.category {
+  font-size: 0.85rem;
+  color: #7d7d7d;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  text-transform: capitalize;
+}
+
+.category:hover {
+  color: #E93172;
+}
+
+.productName {
+  font-size: 1rem;
+  color: #232323;
+  text-decoration: none;
+  font-weight: 600;
+  line-height: 1.3;
+  transition: color 0.3s ease;
+}
+
+.productName:hover {
+  color: #E93172;
+}
+
+.productPrice {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.price {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #232323;
+}
+
+.originalPrice {
+  font-size: 0.9rem;
+  color: #7d7d7d;
+  text-decoration: line-through;
+}
+
+/* FEATURES SECTION */
+.featuresSection {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  background: transparent;
+  border-bottom: 1px solid #ececec;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.featureIcon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  line-height: 1;
+}
+
+.feature h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #232323;
+}
+
+.feature p {
+  margin: 0;
+  color: #7d7d7d;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* BLOGS GRID */
+.blogsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.blogCard {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.blogCard:hover {
+  transform: translateY(-4px);
+}
+
+.blogImage {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.blogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.blogDate {
+  font-size: 0.85rem;
+  color: #7d7d7d;
+  margin: 0;
+  font-weight: 500;
+}
+
+.blogTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  color: #232323;
+  line-height: 1.3;
+}
+
+.readMore {
+  color: #E93172;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-block;
+  transition: color 0.3s ease;
+  align-self: flex-start;
+}
+
+.readMore:hover {
+  color: #a85f3f;
+}
+
+/* INSTAGRAM SECTION */
+.instagramText {
+  text-align: center;
+  color: #7d7d7d;
+  margin: 0 0 40px 0;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.instagramGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.instagramItem {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.instagramItem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.instagramItem:hover img {
+  transform: scale(1.1);
+}
+
+/* NEWSLETTER SECTION */
+.newsletter {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  background: #f4f5f5;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.newsletter h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  color: #232323;
+}
+
+.newsletter p {
+  color: #7d7d7d;
+  font-size: 1rem;
+  margin: 0 0 32px 0;
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.newsletterForm {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.newsletterForm input {
+  padding: 12px 20px;
+  border: 1px solid #d7d7d7;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  min-width: 300px;
+  color: #232323;
+}
+
+.newsletterForm input::placeholder {
+  color: #7d7d7d;
+}
+
+.subscribeBtn {
+  padding: 12px 32px;
+  background: #E93172;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.subscribeBtn:hover {
+  background: #a85f3f;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(189, 116, 76, 0.3);
+}
+
+/* FOOTER */
+.footer {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 60px 20px 20px;
+  margin-top: 40px;
+}
+
+.footerContent {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footerColumn h4 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 20px 0;
+  color: #fff;
+}
+
+.footerColumn ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footerColumn a {
+  color: #d7d7d7;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  line-height: 1.4;
+}
+
+.footerColumn a:hover {
+  color: #E93172;
+}
+
+.footerBottom {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.socialLinks {
+  display: flex;
+  gap: 20px;
+}
+
+.socialLinks a {
+  color: #d7d7d7;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.socialLinks a:hover {
+  color: #E93172;
+}
+
+.footerBottom p {
+  margin: 0;
+  color: #d7d7d7;
+  font-size: 0.9rem;
+}
+
+/* MODAL */
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalWindow {
+  background: #fff;
+  border-radius: 8px;
+  display: flex;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modalImage {
+  flex: 0 0 50%;
+  min-width: 0;
+}
+
+.modalImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modalContent {
+  flex: 0 0 50%;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.closeModal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #232323;
+  padding: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.3s ease;
+}
+
+.closeModal:hover {
+  color: #E93172;
+}
+
+.modalCategory {
+  font-size: 0.85rem;
+  color: #7d7d7d;
+  margin: 0;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.modalName {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0;
+  color: #232323;
+}
+
+.modalPrice {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 1.2rem;
+  margin-top: 8px;
+}
+
+.modalStatus {
+  font-size: 0.9rem;
+  margin: 0;
+  color: #7d7d7d;
+  font-weight: 500;
+}
+
+.quantitySelector {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin: 16px 0;
+}
+
+.quantitySelector button {
+  width: 36px;
+  height: 36px;
+  border: 1px solid #d7d7d7;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.quantitySelector button:hover {
+  border-color: #E93172;
+  color: #E93172;
+  background: #f4f5f5;
+}
+
+.quantitySelector span {
+  min-width: 40px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.addToCartBtn {
+  width: 100%;
+  padding: 14px;
+  background: #E93172;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.addToCartBtn:hover {
+  background: #a85f3f;
+  box-shadow: 0 4px 12px rgba(189, 116, 76, 0.3);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1100px) {
+  .productsGrid,
+  .blogsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .instagramGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .featuresSection {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .carouselContent {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .carouselTitle {
+    font-size: 2.2rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.8rem;
+  }
+
+  .footerContent {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 12px 0;
+  }
+
+  .headerContent {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    gap: 16px;
+    margin-left: 0;
+    font-size: 0.85rem;
+  }
+
+  .carousel,
+  .section,
+  .featuresSection,
+  .newsletter {
+    padding: 40px 20px;
+  }
+
+  .carouselContent {
+    gap: 20px;
+  }
+
+  .carouselTitle {
+    font-size: 1.6rem;
+  }
+
+  .carouselDescription {
+    font-size: 0.95rem;
+  }
+
+  .productsGrid,
+  .blogsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .instagramGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.4rem;
+  }
+
+  .newsletter {
+    padding: 40px 20px;
+  }
+
+  .newsletter h2 {
+    font-size: 1.4rem;
+  }
+
+  .newsletterForm {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .newsletterForm input {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .feature h3 {
+    font-size: 0.9rem;
+  }
+
+  .featureIcon {
+    font-size: 2rem;
+  }
+
+  .footerContent {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+  }
+
+  .footerBottom {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .modalWindow {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .modalImage {
+    flex: 1;
+    max-height: 300px;
+  }
+
+  .modalContent {
+    flex: 1;
+    padding: 30px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .carouselTitle {
+    font-size: 1.3rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 1.2rem;
+  }
+
+  .instagramGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .socialLinks {
+    width: 100%;
+    justify-content: center;
+  }
+}

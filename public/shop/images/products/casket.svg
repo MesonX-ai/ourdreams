@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="280" viewBox="0 0 280 280">
+  <rect fill="#f3f4f6" width="280" height="280"/>
+  <rect fill="#d4a373" x="50" y="100" width="180" height="100" rx="4"/>
+  <rect fill="#c49563" x="50" y="90" width="180" height="20" rx="4"/>
+  <circle fill="#8b6f47" cx="80" cy="110" r="5"/>
+  <circle fill="#8b6f47" cx="140" cy="110" r="5"/>
+  <circle fill="#8b6f47" cx="200" cy="110" r="5"/>
+  <text x="140" y="210" font-family="Montserrat, sans-serif" font-size="16" fill="#6b7280" text-anchor="middle" font-weight="600">Wooden Casket</text>
+</svg>

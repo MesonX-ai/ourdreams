@@ -26,6 +26,12 @@ done
 
 cd "$(dirname "$0")"
 
+# --- Kill any active processes list listening on the target PORT to avoid conflicts ---
+if lsof -ti tcp:"$PORT" >/dev/null 2>&1; then
+  echo "⚔️ Killing active server running on port $PORT..."
+  lsof -ti tcp:"$PORT" | xargs kill -9 2>/dev/null || true
+fi
+
 if ! command -v node >/dev/null 2>&1; then
   echo "❌ Node.js is not installed. Install it from https://nodejs.org (v18+) and retry."
   exit 1
