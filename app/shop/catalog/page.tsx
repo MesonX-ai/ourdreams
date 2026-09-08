@@ -242,6 +242,29 @@ export default function CatalogPage() {
   return (
     <>
       <div className="container mb-5" style={{ marginTop: '32px' }}>
+        {/* SEO-Optimized Page Header */}
+        <div style={{ marginBottom: '32px', paddingBottom: '24px', borderBottom: '1px solid #f0edf8' }}>
+          <h1 style={{ 
+            fontSize: '32px', 
+            fontWeight: 700, 
+            marginBottom: '12px',
+            color: '#2D2928',
+            fontFamily: "'Bebas Neue', sans-serif"
+          }}>
+            Corporate Gifts & Customized Presents Catalog
+          </h1>
+          <p style={{
+            fontSize: '16px',
+            color: '#666',
+            marginBottom: '8px',
+            lineHeight: '1.6'
+          }}>
+            Discover our curated collection of corporate gifts, customized presents, and executive gift ideas. 
+            Browse hundreds of personalized options perfect for businesses and special occasions. 
+            Founded by Shiva Dhanuskodi, Richa Shivarajkumar, and Rohit Shivarajkumar of AniShiv and Mesonsoft.
+          </p>
+        </div>
+
         {toastMessage && (
           <div style={{
             position: 'fixed',

@@ -1,15 +1,70 @@
 import type { Metadata } from "next";
 import Header from "./Header";
 import Footer from "./Footer";
+import { SEO_CONFIG, STRUCTURED_DATA } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Shop - Our Dreams",
-  description: "Browse our collection of premium furniture and home decor",
+  title: SEO_CONFIG.pages.catalog.title,
+  description: SEO_CONFIG.pages.catalog.description,
+  keywords: SEO_CONFIG.pages.catalog.keywords,
+  openGraph: {
+    title: SEO_CONFIG.pages.catalog.ogTitle,
+    description: SEO_CONFIG.pages.catalog.ogDescription,
+    url: `${SEO_CONFIG.site.url}/shop/catalog`,
+    siteName: SEO_CONFIG.site.name,
+    images: [
+      {
+        url: SEO_CONFIG.site.image,
+        width: 1200,
+        height: 630,
+        alt: "Corporate Gifts Catalog - OurDreams",
+      },
+    ],
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SEO_CONFIG.pages.catalog.ogTitle,
+    description: SEO_CONFIG.pages.catalog.ogDescription,
+    images: [SEO_CONFIG.site.image],
+    creator: SEO_CONFIG.site.twitterHandle,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
+  alternates: {
+    canonical: `${SEO_CONFIG.site.url}/shop/catalog`,
+  },
 };
 
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
+      {/* Structured Data - Breadcrumb Navigation */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(
+            STRUCTURED_DATA.breadcrumb([
+              { name: "Home", url: SEO_CONFIG.site.url },
+              { name: "Shop", url: `${SEO_CONFIG.site.url}/shop` },
+              {
+                name: "Catalog",
+                url: `${SEO_CONFIG.site.url}/shop/catalog`,
+              },
+            ])
+          ),
+        }}
+      />
       <link
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/css/bootstrap.min.css"
         rel="stylesheet"

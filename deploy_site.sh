@@ -161,6 +161,14 @@ fi
 [[ -f out/index.html ]] || fail "out/index.html missing — static export did not run. Aborting."
 ok "Static build is ready (out/)."
 
+# Copy PHP files to out/ for deployment (needed for WooCommerce API integration)
+if [[ -d php ]]; then
+  log "Copying PHP files to out/ for deployment..."
+  mkdir -p out/php
+  cp php/*.php out/php/ 2>/dev/null || true
+  ok "PHP files copied to out/php/"
+fi
+
 # ---------------------------------------- 3. dry-run: preview upload ----
 if [[ "$DRY_RUN" == true ]]; then
   log "Calculating upload preview (no FTP contact — commit was already made locally)."
