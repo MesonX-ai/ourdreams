@@ -175,3 +175,215 @@ export async function createOrder(payload: WcOrderPayload): Promise<{ id: number
   }
   throw new Error("Unable to create order on configured WooCommerce proxy endpoints.");
 }
+
+// ===== CORPORATE GIFTS API FUNCTIONS =====
+
+/**
+ * Get corporate gift categories (fallback/enrichment)
+ * Returns both WooCommerce categories and corporate gift categories
+ */
+export async function getCorporateGiftCategories(): Promise<WcCategory[]> {
+  // Try to get categories from WooCommerce first
+  const wcCategories = await getCategories().catch(() => [] as WcCategory[]);
+
+  // Import and merge with corporate gift categories
+  const { CORPORATE_GIFT_CATEGORIES } = await import("./corporateGifts");
+  const corporateCategories: WcCategory[] = CORPORATE_GIFT_CATEGORIES.map((cat) => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    image: undefined,
+  }));
+
+  // Merge and deduplicate by slug
+  const merged = [...wcCategories];
+  const wcSlugs = new Set(wcCategories.map((c) => c.slug));
+  corporateCategories.forEach((cat) => {
+    if (!wcSlugs.has(cat.slug)) {
+      merged.push(cat);
+    }
+  });
+
+  return merged;
+}
+
+/**
+ * Get corporate gifts by category ID (hybrid: WC + mock data)
+ * Falls back to corporate gifts mock data if WooCommerce fails
+ */
+export async function getCorporateGiftsByCategory(
+  categoryId: number,
+  page: number = 1,
+  perPage: number = 20
+): Promise<{ products: WcProduct[]; total: number }> {
+  // Try WooCommerce first
+  const wcResult = await getProductsByCategory(categoryId, page, perPage).catch(() => null);
+  if (wcResult && wcResult.products.length > 0) {
+    return wcResult;
+  }
+
+  // Fallback to corporate gifts mock data
+  const { getCorporateGiftsByCategory: getCorporateGifts } = await import("./corporateGifts");
+
+  // Map corporate gift category ID to name
+  const { CORPORATE_GIFT_CATEGORIES } = await import("./corporateGifts");
+  const categoryName = CORPORATE_GIFT_CATEGORIES.find((c) => c.id === categoryId)?.name;
+
+  if (!categoryName) {
+    return { products: [], total: 0 };
+  }
+
+  const corporateResult = getCorporateGifts(categoryName, page, perPage);
+  const products: WcProduct[] = corporateResult.products.map((cg) => ({
+    id: cg.id,
+    name: cg.name,
+    price: cg.price.toString(),
+    regular_price: cg.regularPrice.toString(),
+    images: cg.images,
+    categories: [{ id: categoryId, name: categoryName, slug: categoryName.toLowerCase().replace(/\s+/g, "-") }],
+    stock_status: cg.inStock ? "instock" : "outofstock",
+  }));
+
+  return { products, total: corporateResult.total };
+}
+
+/**
+ * Get all products from WooCommerce (fetches all pages)
+ * Used for catalog view when syncing with live WooCommerce data
+ */
+export async function getAllProducts(
+  perPage: number = 100,
+  maxPages: number = 10
+): Promise<{ products: WcProduct[]; total: number }> {
+  const allProducts: WcProduct[] = [];
+  let total = 0;
+  let page = 1;
+  let hasMore = true;
+
+  for (const endpoint of PROXY_BASE_PATHS) {
+    while (hasMore && page <= maxPages) {
+      try {
+        const response = await safeFetch(
+          `${endpoint}?path=products&status=publish&per_page=${perPage}&page=${page}`,
+          { cache: "no-store" }
+        );
+
+        if (response?.ok) {
+          const data = (await response.json()) as WcProduct[];
+          const pageTotal = Number(response.headers.get("x-wp-total") || data.length);
+          total = pageTotal;
+
+          if (Array.isArray(data) && data.length > 0) {
+            allProducts.push(...data);
+            hasMore = allProducts.length < pageTotal;
+            page++;
+          } else {
+            hasMore = false;
+          }
+        } else {
+          hasMore = false;
+        }
+      } catch {
+        hasMore = false;
+      }
+    }
+
+    if (allProducts.length > 0) {
+      return { products: allProducts, total };
+    }
+
+    // Reset for next endpoint
+    page = 1;
+    hasMore = true;
+    allProducts.length = 0;
+  }
+
+  // Try store API as fallback
+  page = 1;
+  hasMore = true;
+  for (const base of STORE_API_BASES) {
+    while (hasMore && page <= maxPages) {
+      try {
+        const response = await safeFetch(
+          `${base}/products?per_page=${perPage}&page=${page}&orderby=date&order=desc&status=publish`,
+          { cache: "no-store" }
+        );
+
+        if (response?.ok) {
+          const data = (await response.json()) as any[];
+          const pageTotal = Number(response.headers.get("x-wp-total") || data.length);
+          total = pageTotal;
+
+          if (Array.isArray(data) && data.length > 0) {
+            const products = data.map(mapStoreProduct);
+            allProducts.push(...products);
+            hasMore = allProducts.length < pageTotal;
+            page++;
+          } else {
+            hasMore = false;
+          }
+        } else {
+          hasMore = false;
+        }
+      } catch {
+        hasMore = false;
+      }
+    }
+
+    if (allProducts.length > 0) {
+      return { products: allProducts, total };
+    }
+
+    page = 1;
+    hasMore = true;
+    allProducts.length = 0;
+  }
+
+  return { products: allProducts, total: 0 };
+}
+
+/**
+ * Search across all products (WooCommerce + corporate gifts)
+ */
+export async function searchProducts(
+  query: string,
+  page: number = 1,
+  perPage: number = 20
+): Promise<{ products: WcProduct[]; total: number }> {
+  // Try WooCommerce search
+  for (const endpoint of PROXY_BASE_PATHS) {
+    const response = await safeFetch(
+      `${endpoint}?path=products&search=${encodeURIComponent(query)}&per_page=${perPage}&page=${page}`,
+      { cache: "no-store" }
+    );
+
+    if (response?.ok) {
+      const total = Number(response.headers.get("x-wp-total") || "0");
+      const data = (await response.json()) as WcProduct[];
+      if (Array.isArray(data) && data.length > 0) {
+        return { products: data, total };
+      }
+    }
+  }
+
+  // Fallback to corporate gifts search
+  const { searchCorporateGifts } = await import("./corporateGifts");
+  const corporateResult = searchCorporateGifts(query, page, perPage);
+  const products: WcProduct[] = corporateResult.products.map((cg) => ({
+    id: cg.id,
+    name: cg.name,
+    price: cg.price.toString(),
+    regular_price: cg.regularPrice.toString(),
+    images: cg.images,
+    categories: [
+      {
+        id: 100,
+        name: cg.category,
+        slug: cg.category.toLowerCase().replace(/\s+/g, "-"),
+      },
+    ],
+    stock_status: cg.inStock ? "instock" : "outofstock",
+  }));
+
+  return { products, total: corporateResult.total };
+}

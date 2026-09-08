@@ -28,6 +28,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+/**
+ * Handle corporate gifts API requests (fallback endpoint)
+ */
+function handleCorporateGiftsRequest($path) {
+    $parts = explode('/', trim($path, '/'));
+    
+    if (count($parts) < 2) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid corporate gifts endpoint']);
+        return;
+    }
+
+    $action = $parts[1];
+    $id = isset($parts[2]) ? (int)$parts[2] : null;
+
+    switch ($action) {
+        case 'categories':
+            if ($id) {
+                $result = CorporateGiftsAPI::getCategoryById($id);
+                if ($result) {
+                    echo $result;
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Category not found']);
+                }
+            } else {
+                echo CorporateGiftsAPI::getCategories();
+            }
+            break;
+
+        case 'products':
+            $categoryId = isset($_GET['category']) ? (int)$_GET['category'] : 100;
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 20;
+            
+            $result = CorporateGiftsAPI::getProductsByCategory($categoryId, $page, $per_page);
+            if ($result) {
+                header('X-WP-Total: ' . $result['total']);
+                header('X-WP-TotalPages: ' . ceil($result['total'] / $per_page));
+                echo json_encode($result['products']);
+            } else {
+                http_response_code(404);
+                echo json_encode(['error' => 'Category not found']);
+            }
+            break;
+
+        case 'search':
+            $query = isset($_GET['q']) ? $_GET['q'] : '';
+            $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+            $per_page = isset($_GET['per_page']) ? (int)$_GET['per_page'] : 20;
+            
+            $result = CorporateGiftsAPI::search($query, $page, $per_page);
+            header('X-WP-Total: ' . $result['total']);
+            header('X-WP-TotalPages: ' . ceil($result['total'] / $per_page));
+            echo json_encode($result['products']);
+            break;
+
+        default:
+            http_response_code(404);
+            echo json_encode(['error' => 'Unknown corporate gifts endpoint: ' . $action]);
+    }
+}
+
 // Load configuration (git-ignored).
 $config_file = __DIR__ . '/config.php';
 if (!file_exists($config_file)) {
@@ -36,6 +99,9 @@ if (!file_exists($config_file)) {
     exit;
 }
 require $config_file;
+
+// Load corporate gifts helper for fallback
+require_once __DIR__ . '/corporate-gifts.php';
 
 // Determine the WooCommerce API endpoint path.
 $path = isset($_GET['path']) ? $_GET['path'] : '';
@@ -46,7 +112,16 @@ if ($path === '') {
     $path = 'products';
 }
 
-// Build the full API URL.
+// Check if this is a corporate gifts request (for fallback handling)
+$is_corporate_request = false;
+if (strpos($path, 'corporate-gifts') === 0) {
+    $is_corporate_request = true;
+    // Handle corporate gifts endpoints
+    handleCorporateGiftsRequest($path);
+    exit;
+}
+
+// Build the full API URL for WooCommerce.
 $api_url = WC_API_URL . '/' . $path;
 
 // Append consumer key / secret for authentication.
@@ -96,17 +171,26 @@ if (!empty($headers)) {
 
 // Execute the request.
 $response = curl_exec($ch);
-$http_code = curl_getinfo($ch, CURL_HTTP_CODE);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 $error = curl_error($ch);
 curl_close($ch);
 
-// Handle cURL errors.
+// Handle cURL errors - implement fallback to corporate gifts for categories/products
 if ($response === false) {
-    http_response_code(502);
-    echo json_encode([
-        'error'   => 'Failed to reach WooCommerce API',
-        'details' => $error,
-    ]);
+    // Try fallback to corporate gifts for certain endpoints
+    if (preg_match('/products\/categories|products\?/', $path)) {
+        http_response_code(503);
+        echo json_encode([
+            'error' => 'WooCommerce API unavailable. Please use /api/api.php?path=corporate-gifts/categories',
+            'fallback' => 'corporate-gifts API',
+        ]);
+    } else {
+        http_response_code(502);
+        echo json_encode([
+            'error'   => 'Failed to reach WooCommerce API',
+            'details' => $error,
+        ]);
+    }
     exit;
 }
 

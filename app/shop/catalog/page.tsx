@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Heart, Eye, ShoppingCart } from 'lucide-react';
+import { Heart, Eye, ShoppingCart, RefreshCw } from 'lucide-react';
+import { getAllCorporateGifts, CORPORATE_GIFT_CATEGORIES } from '@/lib/corporateGifts';
+import { getAllProducts } from '@/lib/wcApi';
 
 type Product = {
   id: string;
@@ -12,9 +14,12 @@ type Product = {
   image: string;
   inStock: boolean;
   brand: string;
+  isCorporateGift?: boolean;
+  source?: 'hardcoded' | 'woocommerce';
 };
 
-const ALL_PRODUCTS: Product[] = [
+// Original mock data - preserved as requested
+const ORIGINAL_PRODUCTS: Product[] = [
   { id: '1', name: 'Awesome Armchair', price: 123, regularPrice: 200, category: 'Furniture', image: '/images/e-commerce/home/product1.png', inStock: true, brand: 'Poliform' },
   { id: '2', name: 'Wooden casket', price: 90, regularPrice: 120, category: 'Decoration', image: '/images/e-commerce/home/product2.png', inStock: true, brand: 'Roche Bobois' },
   { id: '3', name: 'Awesome Lamp', price: 20, regularPrice: 45, category: 'Lighting', image: '/images/e-commerce/home/product3.png', inStock: true, brand: 'Edra' },
@@ -25,7 +30,8 @@ const ALL_PRODUCTS: Product[] = [
   { id: '8', name: 'Minimalist Clock', price: 25, regularPrice: 50, category: 'Decoration', image: '/images/e-commerce/home/product8.png', inStock: true, brand: 'Kartell' },
 ];
 
-const CATEGORIES = [
+// Original categories
+const ORIGINAL_CATEGORIES = [
   { id: 'cat-furniture', title: 'Furniture', key: 'Furniture' },
   { id: 'cat-lighting', title: 'Lighting', key: 'Lighting' },
   { id: 'cat-decoration', title: 'Decoration', key: 'Decoration' },
@@ -35,18 +41,165 @@ const CATEGORIES = [
   { id: 'cat-toys', title: 'Toys', key: 'Toys' },
 ];
 
-const BRANDS = ['Poliform', 'Roche Bobois', 'Edra', 'Kartell'];
+const ORIGINAL_BRANDS = ['Poliform', 'Roche Bobois', 'Edra', 'Kartell'];
 
 export default function CatalogPage() {
   const [selectedCategories, setSelectedCategoryFilter] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrandsFilter] = useState<string[]>([]);
   const [inStockOnly, setInStockOnly] = useState<boolean | null>(null);
-  const [rangePrice, setRangePrice] = useState<number>(1000);
+  const [rangePrice, setRangePrice] = useState<number>(5000);
   
   const [hoveredProductId, setHoveredProductId] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [showMobileFilter, setShowMobileFilter] = useState<boolean>(false);
   const [width, setWidth] = useState<number>(1440);
+  const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [allCategories, setAllCategories] = useState<any[]>([]);
+  const [allBrands, setAllBrands] = useState<string[]>([]);
+  
+  // New state for WooCommerce sync
+  const [isLoadingWC, setIsLoadingWC] = useState<boolean>(false);
+  const [useWooCommerce, setUseWooCommerce] = useState<boolean>(false);
+  const [wcLoadError, setWcLoadError] = useState<string | null>(null);
+  const [dataSource, setDataSource] = useState<'hardcoded' | 'woocommerce'>('hardcoded');
+
+  // Load and merge products on component mount
+  useEffect(() => {
+    const corporateGifts = getAllCorporateGifts().map((cg) => ({
+      id: `corp-${cg.id}`,
+      name: cg.name,
+      price: cg.price,
+      regularPrice: cg.regularPrice,
+      category: cg.category,
+      image: cg.image,
+      inStock: cg.inStock,
+      brand: cg.brand,
+      isCorporateGift: true,
+      source: 'hardcoded' as const,
+    }));
+
+    // Merge original products with corporate gifts
+    const merged = [...ORIGINAL_PRODUCTS, ...corporateGifts];
+    setAllProducts(merged);
+
+    // Merge categories
+    const corporateCategories = CORPORATE_GIFT_CATEGORIES.map((cc) => ({
+      id: `cat-${cc.id}`,
+      title: cc.name,
+      key: cc.name,
+      isCorporate: true,
+    }));
+    setAllCategories([...ORIGINAL_CATEGORIES, ...corporateCategories]);
+
+    // Merge brands
+    const corporateBrands = Array.from(
+      new Set(corporateGifts.map((cg) => cg.brand))
+    );
+    setAllBrands([...ORIGINAL_BRANDS, ...corporateBrands]);
+  }, []);
+
+  // Function to load products from WooCommerce
+  const loadFromWooCommerce = async () => {
+    setIsLoadingWC(true);
+    setWcLoadError(null);
+    
+    try {
+      const { products: wcProducts, total } = await getAllProducts(100, 5);
+      
+      if (wcProducts.length === 0) {
+        setWcLoadError('No products found in WooCommerce. Keeping hardcoded data.');
+        setIsLoadingWC(false);
+        return;
+      }
+
+      // Convert WooCommerce products to our format
+      const converted: Product[] = wcProducts.map((wcProd) => ({
+        id: `wc-${wcProd.id}`,
+        name: wcProd.name,
+        price: parseFloat(wcProd.price) || 0,
+        regularPrice: parseFloat(wcProd.regular_price) || parseFloat(wcProd.price) || 0,
+        category: wcProd.categories[0]?.name || 'Uncategorized',
+        image: wcProd.images[0]?.src || '/images/e-commerce/home/product1.png',
+        inStock: wcProd.stock_status === 'instock',
+        brand: 'WooCommerce',
+        source: 'woocommerce' as const,
+      }));
+
+      // Keep original products and add WC products
+      const combined = [...ORIGINAL_PRODUCTS, ...converted];
+      setAllProducts(combined);
+
+      // Update categories from WooCommerce
+      const wcCategoryMap = new Map<string, any>();
+      wcProducts.forEach((prod) => {
+        prod.categories?.forEach((cat) => {
+          if (!wcCategoryMap.has(cat.name)) {
+            wcCategoryMap.set(cat.name, {
+              id: `cat-wc-${cat.id}`,
+              title: cat.name,
+              key: cat.name,
+              isCorporate: false,
+              isWooCommerce: true,
+            });
+          }
+        });
+      });
+
+      const wcCats = Array.from(wcCategoryMap.values());
+      setAllCategories([...ORIGINAL_CATEGORIES, ...wcCats]);
+
+      // Update brands
+      const wcBrands = Array.from(new Set(converted.map((p) => p.brand)));
+      setAllBrands([...ORIGINAL_BRANDS, ...wcBrands]);
+
+      setUseWooCommerce(true);
+      setDataSource('woocommerce');
+      triggerToast(`✓ Loaded ${converted.length} products from WooCommerce!`);
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Failed to load products from WooCommerce';
+      setWcLoadError(errorMsg);
+      triggerToast(`✗ ${errorMsg}`);
+    } finally {
+      setIsLoadingWC(false);
+    }
+  };
+
+  // Function to revert to hardcoded data
+  const revertToHardcoded = () => {
+    const corporateGifts = getAllCorporateGifts().map((cg) => ({
+      id: `corp-${cg.id}`,
+      name: cg.name,
+      price: cg.price,
+      regularPrice: cg.regularPrice,
+      category: cg.category,
+      image: cg.image,
+      inStock: cg.inStock,
+      brand: cg.brand,
+      isCorporateGift: true,
+      source: 'hardcoded' as const,
+    }));
+
+    const merged = [...ORIGINAL_PRODUCTS, ...corporateGifts];
+    setAllProducts(merged);
+
+    const corporateCategories = CORPORATE_GIFT_CATEGORIES.map((cc) => ({
+      id: `cat-${cc.id}`,
+      title: cc.name,
+      key: cc.name,
+      isCorporate: true,
+    }));
+    setAllCategories([...ORIGINAL_CATEGORIES, ...corporateCategories]);
+
+    const corporateBrands = Array.from(
+      new Set(corporateGifts.map((cg) => cg.brand))
+    );
+    setAllBrands([...ORIGINAL_BRANDS, ...corporateBrands]);
+
+    setUseWooCommerce(false);
+    setDataSource('hardcoded');
+    setWcLoadError(null);
+    triggerToast('✓ Reverted to hardcoded data');
+  };
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -78,7 +231,7 @@ export default function CatalogPage() {
     setTimeout(() => setToastMessage(null), 3000);
   };
 
-  const filteredProducts = ALL_PRODUCTS.filter(product => {
+  const filteredProducts = allProducts.filter(product => {
     const matchesCategory = selectedCategories.length > 0 ? selectedCategories.includes(product.category) : true;
     const matchesBrand = selectedBrands.length > 0 ? selectedBrands.includes(product.brand) : true;
     const matchesPrice = product.price <= rangePrice;
@@ -117,7 +270,7 @@ export default function CatalogPage() {
 
             {/* Our Dreams Categories checkboxes */}
             <div className="d-flex flex-column gap-3 mb-5">
-              {CATEGORIES.map((cat) => (
+              {allCategories.map((cat) => (
                 <div key={cat.id} className="d-flex align-items-center">
                   <label className="checkbox-container">
                     <input 
@@ -126,7 +279,10 @@ export default function CatalogPage() {
                       onChange={() => toggleCategory(cat.key)} 
                     />
                     <span className="checkmark" />
-                    <span className="checkbox-text font-weight-semibold ml-3">{cat.title}</span>
+                    <span className="checkbox-text font-weight-semibold ml-3">
+                      {cat.title}
+                      {cat.isCorporate && <span className="badge badge-info ml-2" style={{ fontSize: '10px' }}>Corporate</span>}
+                    </span>
                   </label>
                 </div>
               ))}
@@ -140,7 +296,7 @@ export default function CatalogPage() {
                 type="range" 
                 className="custom-range w-100" 
                 min="0" 
-                max="1000" 
+                max="5000" 
                 step="50" 
                 value={rangePrice} 
                 onChange={(e) => setRangePrice(Number(e.target.value))}
@@ -148,14 +304,14 @@ export default function CatalogPage() {
               />
               <div className="d-flex justify-content-between mt-2 text-muted" style={{ fontSize: '11px' }}>
                 <span>$0</span>
-                <span>$1000</span>
+                <span>$5000</span>
               </div>
             </div>
 
             {/* Our Dreams Brands filter */}
             <h5 className="font-weight-bold text-uppercase mb-4 mt-5 text-dark">Brands</h5>
             <div className="d-flex flex-column gap-3 mb-5">
-              {BRANDS.map((brand) => (
+              {allBrands.slice(0, 20).map((brand) => (
                 <div key={brand} className="d-flex align-items-center">
                   <label className="checkbox-container">
                     <input 
@@ -168,6 +324,11 @@ export default function CatalogPage() {
                   </label>
                 </div>
               ))}
+              {allBrands.length > 20 && (
+                <p className="text-muted" style={{ fontSize: '12px', marginTop: '8px' }}>
+                  ...and {allBrands.length - 20} more brands
+                </p>
+              )}
             </div>
 
             {/* Availability Stock Filter */}
@@ -201,11 +362,85 @@ export default function CatalogPage() {
           {/* Product grid columns */}
           <div className="col-lg-9 col-md-8 col-12">
             
+            {/* Data Source Indicator and Toggle */}
+            {width > 768 && (
+              <div className="mb-4 p-3" style={{ backgroundColor: '#f9f8f7', borderRadius: '6px', border: '1px solid #e1e5eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span style={{ fontSize: '12px', fontWeight: 600, color: '#666' }}>Data Source:</span>
+                  <span style={{ 
+                    backgroundColor: dataSource === 'woocommerce' ? '#28a745' : '#6c757d',
+                    color: 'white',
+                    padding: '4px 10px',
+                    borderRadius: '12px',
+                    fontSize: '11px',
+                    fontWeight: 600
+                  }}>
+                    {dataSource === 'woocommerce' ? '🔴 Live (WooCommerce)' : '🔵 Hardcoded'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  {!useWooCommerce ? (
+                    <button
+                      onClick={loadFromWooCommerce}
+                      disabled={isLoadingWC}
+                      style={{
+                        padding: '8px 16px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        backgroundColor: '#E93172',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: isLoadingWC ? 'not-allowed' : 'pointer',
+                        opacity: isLoadingWC ? 0.7 : 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px'
+                      }}
+                    >
+                      <RefreshCw size={14} style={{ animation: isLoadingWC ? 'spin 1s linear infinite' : 'none' }} />
+                      {isLoadingWC ? 'Loading...' : 'Load from WooCommerce'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={revertToHardcoded}
+                      style={{
+                        padding: '8px 16px',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        backgroundColor: '#6c757d',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Revert to Hardcoded
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {wcLoadError && (
+              <div style={{
+                backgroundColor: '#fff3cd',
+                borderLeft: '4px solid #ffc107',
+                padding: '12px 16px',
+                marginBottom: '16px',
+                borderRadius: '4px',
+                fontSize: '13px',
+                color: '#856404'
+              }}>
+                ⚠️ {wcLoadError}
+              </div>
+            )}
+              
               {/* Top Toolbar matching Our Dreams web exactly */}
             {width > 768 ? (
               <div className="d-flex justify-content-between align-items-center mb-5" style={{ paddingBottom: '20px', borderBottom: '1px solid #f0edf8' }}>
                 <h6 className="mb-0 text-muted" style={{ fontSize: '14px' }}>
-                  Showing <span className="font-weight-bold" style={{ color: '#E93172' }}>{filteredProducts.length}</span> of <span className="font-weight-bold" style={{ color: '#E93172' }}>{ALL_PRODUCTS.length}</span> Products
+                  Showing <span className="font-weight-bold" style={{ color: '#E93172' }}>{filteredProducts.length}</span> of <span className="font-weight-bold" style={{ color: '#E93172' }}>{allProducts.length}</span> Products
                 </h6>
                 
                 <div className="d-flex align-items-center">
@@ -219,17 +454,63 @@ export default function CatalogPage() {
                 </div>
               </div>
             ) : (
-              <div className="d-flex justify-content-between mb-4">
-                <button 
-                  className="text-dark bg-transparent border-0 p-0 font-weight-bold" 
-                  onClick={() => setShowMobileFilter(true)}
-                  style={{ fontSize: '14px', cursor: 'pointer' }}
-                >
-                  <img src="/images/e-commerce/filter.svg" alt="filter" className="mr-2" /> Filters
-                </button>
-                <button className="text-dark bg-transparent border-0 p-0 font-weight-bold" style={{ fontSize: '14px' }}>
-                  <img src="/images/e-commerce/relevant.svg" alt="relevant" className="mr-2" /> Sorting
-                </button>
+              <div>
+                <div className="d-flex justify-content-between mb-4">
+                  <button 
+                    className="text-dark bg-transparent border-0 p-0 font-weight-bold" 
+                    onClick={() => setShowMobileFilter(true)}
+                    style={{ fontSize: '14px', cursor: 'pointer' }}
+                  >
+                    <img src="/images/e-commerce/filter.svg" alt="filter" className="mr-2" /> Filters
+                  </button>
+                  <button className="text-dark bg-transparent border-0 p-0 font-weight-bold" style={{ fontSize: '14px' }}>
+                    <img src="/images/e-commerce/relevant.svg" alt="relevant" className="mr-2" /> Sorting
+                  </button>
+                </div>
+                <div className="mb-4" style={{ display: 'flex', gap: '8px' }}>
+                  {!useWooCommerce ? (
+                    <button
+                      onClick={loadFromWooCommerce}
+                      disabled={isLoadingWC}
+                      style={{
+                        padding: '8px 12px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        backgroundColor: '#E93172',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: isLoadingWC ? 'not-allowed' : 'pointer',
+                        opacity: isLoadingWC ? 0.7 : 1,
+                        flex: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: '4px'
+                      }}
+                    >
+                      <RefreshCw size={12} style={{ animation: isLoadingWC ? 'spin 1s linear infinite' : 'none' }} />
+                      {isLoadingWC ? 'Loading...' : 'Load WC'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={revertToHardcoded}
+                      style={{
+                        padding: '8px 12px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        backgroundColor: '#6c757d',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        flex: 1,
+                      }}
+                    >
+                      Revert
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -542,6 +823,15 @@ export default function CatalogPage() {
           color: #9ca3af;
           text-decoration: line-through;
           margin-left: 8px;
+        }
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
         }
       `}</style>
     </>
