@@ -70,13 +70,27 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
         rel="stylesheet"
         suppressHydrationWarning
       />
+      {/* Preload custom fonts to reduce render-blocking */}
       <link
-        href="https://fonts.googleapis.com/css?family=Bebas+Neue"
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+        suppressHydrationWarning
+      />
+      <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossOrigin="anonymous"
+        suppressHydrationWarning
+      />
+      {/* Use font-display=swap to prevent FOIT (Flash of Invisible Text) */}
+      <link
+        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap"
         rel="stylesheet"
         suppressHydrationWarning
       />
       <div className="shop-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh', paddingTop: '90px' }}>
         <style>{`
+          /* System fonts render immediately while custom fonts load */
           body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
             background-color: #ffffff !important;
@@ -90,13 +104,33 @@ export default function ShopLayout({ children }: { children: React.ReactNode }) 
           .shop-wrapper * {
             box-sizing: border-box;
           }
-          .shop-wrapper h1, .shop-wrapper h2, .shop-wrapper h3, .shop-wrapper h4 {
-            font-family: 'Bebas Neue', sans-serif;
-            color: #2D2928;
+          
+          /* Use display:swap to allow font to load after page render */
+          @supports (font-display: swap) {
+            .shop-wrapper h1, .shop-wrapper h2, .shop-wrapper h3, .shop-wrapper h4 {
+              font-family: 'Bebas Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+              color: #2D2928;
+            }
           }
+          
+          /* Fallback fonts render immediately */
+          .shop-wrapper h1, .shop-wrapper h2, .shop-wrapper h3, .shop-wrapper h4 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Bebas Neue', sans-serif;
+            color: #2D2928;
+            letter-spacing: 0.05em;
+          }
+          
           .shop-wrapper h5, .shop-wrapper h6 {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
             font-weight: 600;
+          }
+          
+          /* Font swap animation to reduce layout shift */
+          @font-feature-values 'Bebas Neue' {
+            @styleset {
+              off: 0;
+              on: 1;
+            }
           }
         `}</style>
         <Header />

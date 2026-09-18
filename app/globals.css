@@ -17,17 +17,37 @@ body {
 body {
   color: #232323;
   background-color: #ffffff;
+  /* Use system fonts that render immediately, with fallbacks for custom fonts */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  
+  /* Optimize text rendering during font load */
+  font-display: swap;
+}
+
+/* Ensure Elementor markup renders with system fonts immediately */
+.elementor body,
+.elementor-container,
+.elementor-widget {
+  font-family: inherit;
+}
+
+/* Optimize heading fonts with swap strategy */
+h1, h2, h3, h4, h5, h6 {
+  font-display: swap;
+  /* Use letter-spacing to account for different font metrics */
+  letter-spacing: -0.015em;
 }
 
 /* Override conflicting global styles */
 .elementor,
 .elementor * {
   all: revert !important;
+  /* Ensure font doesn't get overridden */
+  font-display: swap;
 }
 
 /* Ensure Tailwind classes take precedence */

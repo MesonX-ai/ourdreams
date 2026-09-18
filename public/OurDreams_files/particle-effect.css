@@ -18,6 +18,39 @@
 .elementor-widget-ourdreams-particle-effect:hover > .elementor-widget-container .visible-on-column-hover {
 	opacity: 1;
 }
+
+/* Performance optimizations */
+.has-particle-effect {
+	/* Defer paint until animation is initialized */
+	will-change: auto;
+	/* Use GPU acceleration for canvas rendering */
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+}
+
+.has-particle-effect.particles-initializing {
+	opacity: 0;
+	animation: fadeInParticles 0.4s ease-out forwards;
+	animation-delay: 0.8s;
+}
+
+@keyframes fadeInParticles {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+/* Canvas should not block layout */
+.particles-js-canvas-el {
+	display: block;
+	vertical-align: bottom;
+	/* Ensure canvas renders efficiently */
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden;
+}
 .lqd-particles-bg-wrap.lqd-overlay,
 .ourdreams-particles-container,
 .lqd-particles-bg-wrap.lqd-overlay .lqd-overlay,

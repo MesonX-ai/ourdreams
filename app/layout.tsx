@@ -66,6 +66,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="publisher" content="OurDreams" />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
         
+        {/* Font optimization - preconnect to Google Fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
         {/* Additional SEO Meta Tags */}
         <link rel="canonical" href={SEO_CONFIG.site.url} />
         <link rel="alternate" hrefLang="en-us" href={SEO_CONFIG.site.url} />
