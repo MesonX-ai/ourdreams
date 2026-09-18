@@ -30,26 +30,9 @@
 		},
 		
 		deferredParticleInit: function deferredParticleInit( $scope ) {
-			// Defer particle initialization until after page is fully loaded
-			// This prevents particles.js from blocking the initial render
-			if ( OurDreamsAddonsInit.particleInitialized ) {
-				OurDreamsAddonsInit.particleEffectInit( $scope );
-			} else {
-				// Use requestIdleCallback for better performance, fallback to setTimeout
-				if ( typeof requestIdleCallback !== 'undefined' ) {
-					requestIdleCallback( function() {
-						OurDreamsAddonsInit.particleEffectInit( $scope );
-						OurDreamsAddonsInit.particleInitialized = true;
-					}, { timeout: 2000 } );
-				} else {
-					// Delay by 800ms to allow other content to render first
-					clearTimeout( OurDreamsAddonsInit.particleInitTimer );
-					OurDreamsAddonsInit.particleInitTimer = setTimeout( function() {
-						OurDreamsAddonsInit.particleEffectInit( $scope );
-						OurDreamsAddonsInit.particleInitialized = true;
-					}, 800 );
-				}
-			}
+			// Initialize particles immediately on first render for instant visual feedback
+			OurDreamsAddonsInit.particleEffectInit( $scope );
+			OurDreamsAddonsInit.particleInitialized = true;
 		},
 		particleEffectInit: function particleEffectInit( $scope ) {
 			const $particleItems = $scope.find( '.has-particle-effect' );
@@ -143,10 +126,10 @@
 				// Initialize particles.js with the unique ID and options
 				particlesJS( uniqid, particleItemOptions );
 				
-				// Remove fade-in class after animation completes
+				// Remove fade-in class after animation completes (400ms for quicker appearance)
 				setTimeout( function() {
 					$elThis.removeClass( 'particles-initializing' );
-				}, 1200 );
+				}, 400 );
 			});
 		}
 	}

@@ -1,13 +1,23 @@
 import React from 'react';
 import ProductDetailClient from './ProductDetailClient';
+import { getAllCorporateGifts } from '@/lib/corporateGifts';
+import { generateProductImageUrl } from '@/lib/productImages';
 
 export function generateStaticParams() {
-  return [
+  const corporateGifts = getAllCorporateGifts();
+  const params: { id: string }[] = [
     { id: '1' },
     { id: '2' },
     { id: '3' },
     { id: '4' },
   ];
+  
+  // Add first 50 corporate gifts for static generation
+  corporateGifts.slice(0, 50).forEach((gift, index) => {
+    params.push({ id: `corp-${gift.id}` });
+  });
+  
+  return params;
 }
 
 const PRODUCTS = [
@@ -18,7 +28,27 @@ const PRODUCTS = [
 ];
 
 export default function ProductDetailPage({ params }: { params: { id: string } }) {
-  const product = PRODUCTS.find(p => p.id === params.id) || PRODUCTS[0];
+  // Check if it's a corporate gift
+  if (params.id.startsWith('corp-')) {
+    const corporateGifts = getAllCorporateGifts();
+    const giftId = parseInt(params.id.replace('corp-', ''));
+    const gift = corporateGifts.find(g => g.id === giftId);
+    
+    if (gift) {
+      const product = {
+        id: params.id,
+        name: gift.name,
+        price: gift.price,
+        regularPrice: gift.regularPrice,
+        category: gift.category,
+        image: gift.image,
+        desc: gift.description,
+      };
+      return <ProductDetailClient product={product} />;
+    }
+  }
   
+  // Fall back to original products
+  const product = PRODUCTS.find(p => p.id === params.id) || PRODUCTS[0];
   return <ProductDetailClient product={product} />;
 }

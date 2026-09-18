@@ -19,74 +19,74 @@ const CATEGORY_IMAGE_KEYWORDS: Record<string, string[]> = {
   "Eco-Friendly Gifts": ["bamboo", "eco-friendly", "sustainable", "recycled", "natural"],
 };
 
-// Map specific keywords to curated unsplash photo IDs for reliability
+// Map specific keywords to curated unsplash photo URLs (high-quality, corporate-appropriate)
 const UNSPLASH_PHOTO_MAPPING: Record<string, string> = {
-  // Executive Gifts
-  "briefcase": "photo-1622296277387-114a-8b60-3fda5f5e8c00",
-  "leather portfolio": "photo-1553062407-98eeb64c6a62",
-  "desk organizer": "photo-1612198188060-c7c2a3b66eae",
-  "luxury pen": "photo-1581092161562-40038e57c47a",
-  "desk clock": "photo-1579769673668-461cb66d7480",
+  // Executive Gifts - Premium leather and desk items
+  "briefcase": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=500&fit=crop&q=80",
+  "leather portfolio": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=500&fit=crop&q=80",
+  "desk organizer": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=500&h=500&fit=crop&q=80",
+  "luxury pen": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=500&h=500&fit=crop&q=80",
+  "desk clock": "https://images.unsplash.com/photo-1579769673668-461cb66d7480?w=500&h=500&fit=crop&q=80",
 
-  // Employee Recognition
-  "award": "photo-1540575467063-178f50911e94",
-  "trophy": "photo-1540575467063-178f50911e94",
-  "medal": "photo-1578926314433-8af2f400458b",
-  "recognition": "photo-1552664730-d307ca884978",
-  "certificate": "photo-1493857671505-72967e2e2760",
+  // Employee Recognition - Awards and trophies
+  "award": "https://images.unsplash.com/photo-1540575467063-178f50911e94?w=500&h=500&fit=crop&q=80",
+  "trophy": "https://images.unsplash.com/photo-1507842217343-583f20270319?w=500&h=500&fit=crop&q=80",
+  "medal": "https://images.unsplash.com/photo-1551027613-112d4d1d313e?w=500&h=500&fit=crop&q=80",
+  "recognition": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=500&h=500&fit=crop&q=80",
+  "certificate": "https://images.unsplash.com/photo-1493857671505-72967e2e2760?w=500&h=500&fit=crop&q=80",
 
-  // Drinkware
-  "coffee mug": "photo-1509042239860-f550ce710b93",
-  "water bottle": "photo-1535632066927-ab7c9ab60908",
-  "tumbler": "photo-1602087113235-7d7a39bde438",
-  "thermos": "photo-1602087113235-7d7a39bde438",
-  "wine glass": "photo-1510812431401-41d2cab2de3d",
+  // Drinkware & Hydration - Mugs, bottles, glasses
+  "coffee mug": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&h=500&fit=crop&q=80",
+  "water bottle": "https://images.unsplash.com/photo-1602087113235-7d7a39bde438?w=500&h=500&fit=crop&q=80",
+  "tumbler": "https://images.unsplash.com/photo-1614707267537-b85faf00021b?w=500&h=500&fit=crop&q=80",
+  "thermos": "https://images.unsplash.com/photo-1602087113235-7d7a39bde438?w=500&h=500&fit=crop&q=80",
+  "wine glass": "https://images.unsplash.com/photo-1510812431401-41d2cab2de3d?w=500&h=500&fit=crop&q=80",
 
-  // Tech Accessories
-  "laptop": "photo-1517694712202-14dd9538aa97",
-  "phone charger": "photo-1556656793-08538906a9f8",
-  "wireless speaker": "photo-1608043152269-423dbba4e7e1",
-  "tech gadget": "photo-1625948515291-69613efd103f",
-  "usb adapter": "photo-1597872200969-2b65d56bd16b",
+  // Tech Accessories - Gadgets and devices
+  "laptop": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=500&fit=crop&q=80",
+  "phone charger": "https://images.unsplash.com/photo-1556656793-08538906a9f8?w=500&h=500&fit=crop&q=80",
+  "wireless speaker": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop&q=80",
+  "tech gadget": "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=500&h=500&fit=crop&q=80",
+  "usb adapter": "https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=500&h=500&fit=crop&q=80",
 
-  // Office Supplies
-  "desk pad": "photo-1484480974693-6ca0a78fb36b",
-  "pen organizer": "photo-1484480974693-6ca0a78fb36b",
-  "notepad": "photo-1484480974693-6ca0a78fb36b",
-  "folder": "photo-1484480974693-6ca0a78fb36b",
-  "clipboard": "photo-1484480974693-6ca0a78fb36b",
+  // Office Supplies - Desk and workspace items
+  "desk pad": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=500&h=500&fit=crop&q=80",
+  "pen organizer": "https://images.unsplash.com/photo-1595521624376-9c11f76bbe73?w=500&h=500&fit=crop&q=80",
+  "notepad": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=500&h=500&fit=crop&q=80",
+  "folder": "https://images.unsplash.com/photo-1587825140708-dfaf72ae4b04?w=500&h=500&fit=crop&q=80",
+  "clipboard": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=500&h=500&fit=crop&q=80",
 
-  // Apparel
-  "polo shirt": "photo-1521572163474-6864f9cf17ab",
-  "t-shirt": "photo-1521572163474-6864f9cf17ab",
-  "cap": "photo-1521572163474-6864f9cf17ab",
-  "jacket": "photo-1551028719-00167b16ebc5",
-  "hoodie": "photo-1556821552-107fcaa46f67",
+  // Apparel & Textiles - Clothing and accessories
+  "polo shirt": "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500&h=500&fit=crop&q=80",
+  "t-shirt": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500&h=500&fit=crop&q=80",
+  "cap": "https://images.unsplash.com/photo-1533418735396-971a0b1f89d7?w=500&h=500&fit=crop&q=80",
+  "jacket": "https://images.unsplash.com/photo-1551028719-00167b16ebc5?w=500&h=500&fit=crop&q=80",
+  "hoodie": "https://images.unsplash.com/photo-1556821552-107fcaa46f67?w=500&h=500&fit=crop&q=80",
 
-  // Wellness
-  "yoga mat": "photo-1506126613408-eca07ce68773",
-  "fitness": "photo-1534438327276-14e5300c3a48",
-  "meditation": "photo-1506126613408-eca07ce68773",
-  "exercise ball": "photo-1534438327276-14e5300c3a48",
-  "wellness": "photo-1506126613408-eca07ce68773",
+  // Wellness & Lifestyle - Yoga, fitness, meditation
+  "yoga mat": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&h=500&fit=crop&q=80",
+  "fitness": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&h=500&fit=crop&q=80",
+  "meditation": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&h=500&fit=crop&q=80",
+  "exercise ball": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=500&h=500&fit=crop&q=80",
+  "wellness": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&h=500&fit=crop&q=80",
 
-  // Travel
-  "luggage": "photo-1526941481183-34f63f1ac040",
-  "travel bag": "photo-1526941481183-34f63f1ac040",
-  "passport": "photo-1488646953014-85cb44e25828",
-  "travel organizer": "photo-1526941481183-34f63f1ac040",
-  "travel mug": "photo-1559056199-641a0ac8b8d2",
+  // Travel & Mobility - Luggage and travel gear
+  "luggage": "https://images.unsplash.com/photo-1526941481183-34f63f1ac040?w=500&h=500&fit=crop&q=80",
+  "travel bag": "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500&h=500&fit=crop&q=80",
+  "passport": "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=500&h=500&fit=crop&q=80",
+  "travel organizer": "https://images.unsplash.com/photo-1556821552-107fcaa46f67?w=500&h=500&fit=crop&q=80",
+  "travel mug": "https://images.unsplash.com/photo-1559056199-641a0ac8b8d2?w=500&h=500&fit=crop&q=80",
 
-  // Awards
-  "crystal award": "photo-1540575467063-178f50911e94",
-  "acrylic plaque": "photo-1540575467063-178f50911e94",
+  // Awards & Recognition - Trophies and plaques
+  "crystal award": "https://images.unsplash.com/photo-1507842217343-583f20270319?w=500&h=500&fit=crop&q=80",
+  "acrylic plaque": "https://images.unsplash.com/photo-1540575467063-178f50911e94?w=500&h=500&fit=crop&q=80",
 
-  // Eco-Friendly
-  "bamboo": "photo-1518837695005-2083093ee35b",
-  "eco-friendly": "photo-1518837695005-2083093ee35b",
-  "sustainable": "photo-1518837695005-2083093ee35b",
-  "recycled": "photo-1518837695005-2083093ee35b",
-  "natural": "photo-1518837695005-2083093ee35b",
+  // Eco-Friendly Gifts - Sustainable and natural products
+  "bamboo": "https://images.unsplash.com/photo-1542601906960-ba2006ce398f?w=500&h=500&fit=crop&q=80",
+  "eco-friendly": "https://images.unsplash.com/photo-1542601906960-ba2006ce398f?w=500&h=500&fit=crop&q=80",
+  "sustainable": "https://images.unsplash.com/photo-1542601906960-ba2006ce398f?w=500&h=500&fit=crop&q=80",
+  "recycled": "https://images.unsplash.com/photo-1542601906960-ba2006ce398f?w=500&h=500&fit=crop&q=80",
+  "natural": "https://images.unsplash.com/photo-1542601906960-ba2006ce398f?w=500&h=500&fit=crop&q=80",
 };
 
 // Alternative high-quality placeholder service URLs
@@ -98,9 +98,14 @@ const getPixabayStylePlaceholder = (category: string, productName: string, index
   return `https://picsum.photos/500/500?random=${category.replace(/\s+/g, "_")}_${index}`;
 };
 
-// Get Unsplash image URL
-const getUnsplashUrl = (photoId: string): string => {
-  return `https://images.unsplash.com/${photoId}?w=500&h=500&fit=crop&crop=faces`;
+// Get Unsplash image URL (now returns full URL directly)
+const getUnsplashUrl = (photoUrl: string): string => {
+  // If already a full URL, return as-is
+  if (photoUrl.startsWith('http')) {
+    return photoUrl;
+  }
+  // Fallback: construct URL from photo ID (legacy support)
+  return `https://images.unsplash.com/${photoUrl}?w=500&h=500&fit=crop&q=80`;
 };
 
 // Fallback gradient/color based placeholder
@@ -194,16 +199,16 @@ export function generateProductImageUrls(
  */
 export function getCategoryDefaultImage(category: string): string {
   const defaultImages: Record<string, string> = {
-    "Executive Gifts": getUnsplashUrl("photo-1553062407-98eeb64c6a62"),
-    "Employee Recognition": getUnsplashUrl("photo-1540575467063-178f50911e94"),
-    "Drinkware & Hydration": getUnsplashUrl("photo-1509042239860-f550ce710b93"),
-    "Tech Accessories": getUnsplashUrl("photo-1517694712202-14dd9538aa97"),
-    "Office Supplies": getUnsplashUrl("photo-1484480974693-6ca0a78fb36b"),
-    "Apparel & Textiles": getUnsplashUrl("photo-1521572163474-6864f9cf17ab"),
-    "Wellness & Lifestyle": getUnsplashUrl("photo-1506126613408-eca07ce68773"),
-    "Travel & Mobility": getUnsplashUrl("photo-1526941481183-34f63f1ac040"),
-    "Awards & Recognition": getUnsplashUrl("photo-1540575467063-178f50911e94"),
-    "Eco-Friendly Gifts": getUnsplashUrl("photo-1518837695005-2083093ee35b"),
+    "Executive Gifts": "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=500&h=500&fit=crop&q=80",
+    "Employee Recognition": "https://images.unsplash.com/photo-1540575467063-178f50911e94?w=500&h=500&fit=crop&q=80",
+    "Drinkware & Hydration": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&h=500&fit=crop&q=80",
+    "Tech Accessories": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&h=500&fit=crop&q=80",
+    "Office Supplies": "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?w=500&h=500&fit=crop&q=80",
+    "Apparel & Textiles": "https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=500&h=500&fit=crop&q=80",
+    "Wellness & Lifestyle": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=500&h=500&fit=crop&q=80",
+    "Travel & Mobility": "https://images.unsplash.com/photo-1526941481183-34f63f1ac040?w=500&h=500&fit=crop&q=80",
+    "Awards & Recognition": "https://images.unsplash.com/photo-1507842217343-583f20270319?w=500&h=500&fit=crop&q=80",
+    "Eco-Friendly Gifts": "https://images.unsplash.com/photo-1542601906960-ba2006ce398f?w=500&h=500&fit=crop&q=80",
   };
   
   return defaultImages[category] || getColorPlaceholder(category, "Product");

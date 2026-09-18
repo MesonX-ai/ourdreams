@@ -30,8 +30,8 @@
 
 .has-particle-effect.particles-initializing {
 	opacity: 0;
-	animation: fadeInParticles 0.4s ease-out forwards;
-	animation-delay: 0.8s;
+	animation: fadeInParticles 0.2s ease-out forwards;
+	animation-delay: 0s;
 }
 
 @keyframes fadeInParticles {
