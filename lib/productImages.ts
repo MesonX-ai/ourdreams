@@ -77,6 +77,8 @@ const UNSPLASH_PHOTO_MAPPING: Record<string, string> = {
   "notepad": "https://picsum.photos/500/500?random=43",
   "folder": "https://picsum.photos/500/500?random=44",
   "clipboard": "https://picsum.photos/500/500?random=45",
+  "phone stand": "https://picsum.photos/500/500?random=76",
+  "desk calendar": "https://picsum.photos/500/500?random=77",
 
   // Apparel & Textiles - Clothing and accessories
   "polo shirt": "https://picsum.photos/500/500?random=46",
